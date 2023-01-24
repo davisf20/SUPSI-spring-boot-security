@@ -27,6 +27,12 @@ public class Employee {
     @Column(name = "FirstName", nullable = false)
     private String firstName;
 
+    @Column(name = "Username", nullable = false)
+    private String username;
+
+    @Column(name = "Password", nullable = false)
+    private String password;
+
     @Column(name = "Title")
     private String title;
 

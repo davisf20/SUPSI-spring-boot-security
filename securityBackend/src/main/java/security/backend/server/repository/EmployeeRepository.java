@@ -6,4 +6,5 @@ import security.backend.server.model.Employee;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+    Employee findByUsername(String username);
 }

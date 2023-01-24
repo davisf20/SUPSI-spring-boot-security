@@ -20,13 +20,13 @@ public class CustomerController {
 
     @GetMapping("/customers")
     public List<Customer> getCustomers() {
-        return customerService.findAll();
+        return customerService.getAll();
     }
 
     @GetMapping("/customer/{id}")
     public ResponseEntity<Customer> getCustomerById(@PathVariable int id) {
         if (customerService.exists(id)) {
-            return new ResponseEntity<>(customerService.findById(id), HttpStatus.OK);
+            return new ResponseEntity<>(customerService.getById(id), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -34,6 +34,6 @@ public class CustomerController {
 
     @GetMapping("/customersByEmployee/{id}")
     public List<Customer> getCustomersByEmployee(@PathVariable int id) {
-        return customerService.findAll().stream().filter(customer -> customer.getSupportRepId().getEmployeeId() == id).toList();
+        return customerService.getAll().stream().filter(customer -> customer.getSupportRepId().getEmployeeId() == id).toList();
     }
 }

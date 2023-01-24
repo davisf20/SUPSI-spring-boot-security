@@ -1,12 +1,17 @@
 package security.backend.server.service;
 
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import security.backend.server.model.Employee;
+import security.backend.server.model.UserDAO;
 import security.backend.server.repository.EmployeeRepository;
+
+import java.util.List;
 
 @Service
 public class EmployeeService implements UserDetailsService {
@@ -18,16 +23,30 @@ public class EmployeeService implements UserDetailsService {
         this.bcryptEncoder = bcryptEncoder;
     }
 
+    public List<Employee> getAll() {
+        return employeeRepository.findAll();
+    }
+
+    public boolean exists(int id) {
+        return employeeRepository.existsById((long) id);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        /*List<SimpleGrantedAuthority> roles;
+        Employee employee = employeeRepository.findByUsername(username);
+        if (employee == null)
+            throw new UsernameNotFoundException("User not found with the name " + username);
+
+        roles = List.of(new SimpleGrantedAuthority(employee.getRole()));
+        return new User(employee.getUsername(), employee.getPassword(), roles);*/
         return null;
     }
 
-    /*public Employee save(Employee employee) {
-        Employee newEmployee = new Employee();
-        newEmployee.setUsername(employee.getUsername());
-        newEmployee.setPassword(bcryptEncoder.encode(employee.getPassword()));
-        newEmployee.setRole(employee.getRole());
-        return employeeRepository.save(newEmployee);
-    }*/
+    public Employee save(Employee employee) {
+        if (!exists(employee.getEmployeeId())) {
+            employee.setPassword(bcryptEncoder.encode(employee.getPassword()));
+        }
+        return employeeRepository.save(employee);
+    }
 }

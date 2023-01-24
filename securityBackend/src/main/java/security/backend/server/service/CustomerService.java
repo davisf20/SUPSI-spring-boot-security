@@ -14,11 +14,11 @@ public class CustomerService {
         this.customerRepository = customerRepository;
     }
 
-    public List<Customer> findAll() {
+    public List<Customer> getAll() {
         return customerRepository.findAll();
     }
 
-    public Customer findById(int id) {
+    public Customer getById(int id) {
         return customerRepository.findById((long) id).orElse(null);
     }
 
