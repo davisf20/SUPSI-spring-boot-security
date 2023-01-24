@@ -18,12 +18,12 @@ public class CustomerService {
         return customerRepository.findAll();
     }
 
-    public Customer getById(int id) {
-        return customerRepository.findById((long) id).orElse(null);
+    public Customer getById(Long id) {
+        return customerRepository.findById(id).orElse(null);
     }
 
-    public boolean exists(int id) {
-        return customerRepository.existsById((long) id);
+    public boolean exists(Long id) {
+        return customerRepository.existsById(id);
     }
 
     public Customer save(Customer customer) {

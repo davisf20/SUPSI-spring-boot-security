@@ -1,11 +1,13 @@
 package security.backend.server.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,7 +21,7 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "EmployeeId", nullable = false)
-    private int employeeId;
+    private Long employeeId;
 
     @Column(name = "LastName", nullable = false)
     private String lastName;
@@ -70,6 +72,6 @@ public class Employee {
     @Column(name = "Email")
     private String email;
 
-    @OneToMany(mappedBy = "supportRepId")
-    private List<Customer> customers;
+    /*@OneToMany(mappedBy = "supportRepId")
+    private List<Customer> customers;*/
 }

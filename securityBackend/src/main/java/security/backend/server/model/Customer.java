@@ -1,5 +1,6 @@
 package security.backend.server.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,7 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CustomerId", nullable = false)
-    private int customerId;
+    private Long customerId;
 
     @Column(name = "FirstName", nullable = false)
     private String firstName;

@@ -15,7 +15,7 @@ public class securityBackendApplication {
         SpringApplication.run(securityBackendApplication.class, args);
     }
 
-    @Bean
+    /*@Bean
     public CommandLineRunner addUsername(EmployeeService employeeService) {
         return args -> {
             List<Employee> employees = employeeService.getAll();
@@ -35,5 +35,5 @@ public class securityBackendApplication {
                 employeeService.save(e);
             }
         };
-    }
+    }*/
 }

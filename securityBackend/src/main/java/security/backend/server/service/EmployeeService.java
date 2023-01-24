@@ -27,8 +27,8 @@ public class EmployeeService implements UserDetailsService {
         return employeeRepository.findAll();
     }
 
-    public boolean exists(int id) {
-        return employeeRepository.existsById((long) id);
+    public boolean exists(Long id) {
+        return employeeRepository.existsById(id);
     }
 
     @Override
