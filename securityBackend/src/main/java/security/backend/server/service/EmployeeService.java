@@ -44,9 +44,7 @@ public class EmployeeService implements UserDetailsService {
     }
 
     public Employee save(Employee employee) {
-        if (!exists(employee.getEmployeeId())) {
-            employee.setPassword(bcryptEncoder.encode(employee.getPassword()));
-        }
+        employee.setPassword(bcryptEncoder.encode(employee.getPassword()));
         return employeeRepository.save(employee);
     }
 }

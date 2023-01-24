@@ -15,13 +15,15 @@ public class securityBackendApplication {
         SpringApplication.run(securityBackendApplication.class, args);
     }
 
-    /*@Bean
+    @Bean
     public CommandLineRunner addUsername(EmployeeService employeeService) {
         return args -> {
             List<Employee> employees = employeeService.getAll();
             for(Employee e : employees) {
-                e.setUsername(e.getFirstName().toLowerCase() + "." + e.getLastName().toLowerCase());
-                employeeService.save(e);
+                if (e.getUsername().isEmpty()) {
+                    e.setUsername(e.getFirstName().toLowerCase() + "." + e.getLastName().toLowerCase());
+                    employeeService.save(e);
+                }
             }
         };
     }
@@ -31,9 +33,11 @@ public class securityBackendApplication {
         return args -> {
             List<Employee> employees = employeeService.getAll();
             for(Employee e : employees) {
-                e.setPassword("Jo5hu4!");
-                employeeService.save(e);
+                if (e.getPassword().isEmpty()) {
+                    e.setPassword("Jo5hu4!");
+                    employeeService.save(e);
+                }
             }
         };
-    }*/
+    }
 }
