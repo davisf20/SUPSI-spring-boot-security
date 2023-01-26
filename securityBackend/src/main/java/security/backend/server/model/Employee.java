@@ -38,6 +38,9 @@ public class Employee {
     @Column(name = "Title")
     private String title;
 
+    @Column(name = "Role")
+    private String role;
+
     @ManyToOne
     @JoinColumn(name = "ReportsTo")
     private Employee reportsTo;

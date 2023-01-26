@@ -40,4 +40,20 @@ public class securityBackendApplication {
             }
         };
     }
+
+    @Bean
+    public CommandLineRunner addRole(EmployeeService employeeService) {
+        return args -> {
+            List<Employee> employees = employeeService.getAll();
+            for(Employee e : employees) {
+                if (e.getRole() == null) {
+                    if (e.getTitle().contains("Manager"))
+                        e.setRole("ROLE_ADMIN");
+                    else
+                        e.setRole("ROLE_USER");
+                    employeeService.save(e);
+                }
+            }
+        };
+    }
 }

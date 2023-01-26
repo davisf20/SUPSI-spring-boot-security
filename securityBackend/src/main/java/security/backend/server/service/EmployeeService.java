@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import security.backend.server.model.Employee;
-import security.backend.server.model.UserDAO;
 import security.backend.server.repository.EmployeeRepository;
 
 import java.util.List;
@@ -33,14 +32,13 @@ public class EmployeeService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        /*List<SimpleGrantedAuthority> roles;
+        List<SimpleGrantedAuthority> roles;
         Employee employee = employeeRepository.findByUsername(username);
         if (employee == null)
             throw new UsernameNotFoundException("User not found with the name " + username);
 
         roles = List.of(new SimpleGrantedAuthority(employee.getRole()));
-        return new User(employee.getUsername(), employee.getPassword(), roles);*/
-        return null;
+        return new User(employee.getUsername(), employee.getPassword(), roles);
     }
 
     public Employee save(Employee employee) {
