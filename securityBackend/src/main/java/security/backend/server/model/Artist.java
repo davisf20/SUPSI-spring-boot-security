@@ -23,6 +23,6 @@ public class Artist {
     @Column(name = "Name")
     private String name;
 
-    @OneToMany(mappedBy = "artistId")
-    private List<Album> albums;
+    /*@OneToMany(mappedBy = "artistId")
+    private List<Album> albums;*/
 }

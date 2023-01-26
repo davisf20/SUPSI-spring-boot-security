@@ -42,6 +42,14 @@ public class EmployeeService implements UserDetailsService {
     }
 
     public Employee save(Employee employee) {
+        if (employeeRepository.findByUsername(employee.getUsername()) != null)
+            throw new RuntimeException("User already exists");
+
+        if (employee.getTitle() != null && employee.getTitle().contains("Manager"))
+            employee.setRole("ROLE_ADMIN");
+        else
+            employee.setRole("ROLE_USER");
+
         employee.setPassword(bcryptEncoder.encode(employee.getPassword()));
         return employeeRepository.save(employee);
     }

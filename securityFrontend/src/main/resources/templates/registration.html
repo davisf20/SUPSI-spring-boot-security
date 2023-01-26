@@ -21,22 +21,37 @@
                     <div class="card bg-dark text-white" style="border-radius: 1rem;">
                         <div class="card-body p-5 text-center">
 
-                            <form class="mb-md-5 mt-md-4 pb-5" th:action="@{/registration}" th:object="${user}" method="post">
+                            <form class="mb-md-5 mt-md-4 pb-5" th:action="@{/registration}" th:object="${employee}" method="post">
                                 <h1 class="fw-bold mb-2 text-uppercase">Registration Page</h1>
                                 <p class="text-white-50 mb-5">Please fill the form to create an account.</p>
                                 <hr>
+
+                                <div class="form-outline form-white mb-4">
+                                    <label class="form-label" for="username"><b>First Name</b></label>
+                                    <input class="form-control form-control-lg card bg-dark text-white border-light" type="text" th:field="*{firstName}" placeholder="Enter First Name" name="firstName" id="firstName" required>
+                                </div>
+
+                                <div class="form-outline form-white mb-4">
+                                    <label class="form-label" for="username"><b>Last Name</b></label>
+                                    <input class="form-control form-control-lg card bg-dark text-white border-light" type="text" th:field="*{lastName}" placeholder="Enter Last Name" name="lastName" id="lastName" required>
+                                </div>
 
                                 <div class="form-outline form-white mb-4">
                                     <label class="form-label" for="username"><b>Username</b></label>
                                     <input class="form-control form-control-lg card bg-dark text-white border-light" type="text" th:field="*{username}" placeholder="Enter Username" name="username" id="username" required>
                                 </div>
 
-                                <div class="form-outline form-white mb-4">
+                                <!--<div class="form-outline form-white mb-4">
                                     <label class="form-label" for="role"><b>Role</b></label>
                                     <select class="form-control form-control-lg card bg-dark text-white border-light" id="role" name="role" th:field="*{role}">
                                         <option th:value="${'ROLE_USER'}" th:text="${'User'}"></option>
                                         <option th:value="${'ROLE_ADMIN'}" th:text="${'Admin'}"></option>
                                     </select>
+                                </div>-->
+
+                                <div class="form-outline form-white mb-4">
+                                    <label class="form-label" for="title"><b>Title</b></label>
+                                    <input class="form-control form-control-lg card bg-dark text-white border-light" type="text" th:field="*{title}" placeholder="Enter Title" name="title" id="title" required>
                                 </div>
 
                                 <div class="form-outline form-white mb-4">

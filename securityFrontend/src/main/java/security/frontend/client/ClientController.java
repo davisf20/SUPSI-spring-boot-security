@@ -9,14 +9,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.client.RestTemplate;
+import security.frontend.client.Model.Employee;
 import security.frontend.client.Model.RequestRefreshToken;
 import security.frontend.client.Model.ResponseToken;
-import security.frontend.client.Model.User;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.Objects;
 
 @Controller
 public class ClientController {
@@ -59,7 +59,7 @@ public class ClientController {
 
     @GetMapping("/")
     public String login(Model model, HttpServletResponse response) {
-        model.addAttribute("user", new User());
+        model.addAttribute("employee", new Employee());
         return "login";
     }
 
@@ -73,7 +73,7 @@ public class ClientController {
 
     @GetMapping("/registration")
     public String registration(Model model) {
-        model.addAttribute("user", new User());
+        model.addAttribute("employee", new Employee());
         return "registration";
     }
 
@@ -99,10 +99,10 @@ public class ClientController {
     }
 
     @PostMapping("/registration")
-    public String registration(User user) throws JsonProcessingException {
+    public String registration(Employee employee) throws JsonProcessingException {
         String response = null;
         // convert the user registration object to JSON
-        String registrationBody = getBody(user);
+        String registrationBody = getBody(employee);
 
         // create headers specifying that it is JSON request
         HttpHeaders registrationHeaders = getHeaders();
@@ -125,10 +125,10 @@ public class ClientController {
     }
 
     @PostMapping("/login")
-    public String handleLogin(User user, HttpServletResponse responseHttp) throws JsonProcessingException {
+    public String handleLogin(Employee employee, HttpServletResponse responseHttp) throws JsonProcessingException {
         String response;
         // convert the user registration object to JSON
-        String loginBody = getBody(user);
+        String loginBody = getBody(employee);
 
         // create headers specifying that it is JSON request
         HttpHeaders loginHeaders = getHeaders();
@@ -199,8 +199,8 @@ public class ClientController {
         return headers;
     }
 
-    private String getBody(final User user) throws JsonProcessingException {
-        return new ObjectMapper().writeValueAsString(user);
+    private String getBody(final Employee employee) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(employee);
     }
 
     private String getBody(final RequestRefreshToken refreshToken) throws JsonProcessingException {

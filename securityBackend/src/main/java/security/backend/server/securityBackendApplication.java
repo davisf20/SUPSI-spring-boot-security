@@ -4,7 +4,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import security.backend.server.model.Employee;
+import security.backend.server.repository.EmployeeRepository;
 import security.backend.server.service.EmployeeService;
 
 import java.util.List;
@@ -20,7 +22,7 @@ public class securityBackendApplication {
         return args -> {
             List<Employee> employees = employeeService.getAll();
             for(Employee e : employees) {
-                if (e.getUsername().isEmpty()) {
+                if (e.getUsername() == null || e.getUsername().isEmpty()) {
                     e.setUsername(e.getFirstName().toLowerCase() + "." + e.getLastName().toLowerCase());
                     employeeService.save(e);
                 }
@@ -29,13 +31,13 @@ public class securityBackendApplication {
     }
 
     @Bean
-    public CommandLineRunner addPassword(EmployeeService employeeService) {
+    public CommandLineRunner addPassword(EmployeeRepository employeeRepository, PasswordEncoder bcryptEncoder) {
         return args -> {
-            List<Employee> employees = employeeService.getAll();
+            List<Employee> employees = employeeRepository.findAll();
             for(Employee e : employees) {
-                if (e.getPassword().isEmpty()) {
-                    e.setPassword("Jo5hu4!");
-                    employeeService.save(e);
+                if (e.getPassword() == null || e.getPassword().isEmpty()) {
+                    e.setPassword(bcryptEncoder.encode("Jo5hu4!"));
+                    employeeRepository.save(e);
                 }
             }
         };
@@ -46,7 +48,7 @@ public class securityBackendApplication {
         return args -> {
             List<Employee> employees = employeeService.getAll();
             for(Employee e : employees) {
-                if (e.getRole() == null) {
+                if (e.getRole() == null || e.getRole().isEmpty()) {
                     if (e.getTitle().contains("Manager"))
                         e.setRole("ROLE_ADMIN");
                     else
