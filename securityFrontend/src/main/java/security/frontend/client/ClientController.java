@@ -74,7 +74,7 @@ public class ClientController {
     @GetMapping("/registration")
     public String registration(Model model) {
         model.addAttribute("employee", new Employee());
-        return "registration";
+        return "register";
     }
 
     @GetMapping("/error")
