@@ -48,6 +48,7 @@ public class SpringSecurityConfiguration {
                 .antMatchers("/registration","/","/login","/error").permitAll()
                 .antMatchers("/css/**").permitAll()
                 .antMatchers("/js/**").permitAll()
+                .antMatchers("/img/**").permitAll()
                 .anyRequest().authenticated();
 
         // Define the exception handler for unauthorized requests
