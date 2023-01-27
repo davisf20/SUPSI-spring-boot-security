@@ -2,19 +2,20 @@ package security.backend.server.controller;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import security.backend.server.model.AuthenticationRequest;
-import security.backend.server.model.AuthenticationResponse;
-import security.backend.server.model.Employee;
-import security.backend.server.model.RequestRefreshToken;
+import security.backend.server.model.*;
+import security.backend.server.service.CustomerService;
 import security.backend.server.service.EmployeeService;
 import security.backend.server.service.JwtService;
 
@@ -22,12 +23,21 @@ import security.backend.server.service.JwtService;
 public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
     private final EmployeeService employeeService;
+    private final CustomerService customerService;
     private final JwtService jwtService;
 
+    private String secret;
 
-    public AuthenticationController(AuthenticationManager authenticationManager, EmployeeService employeeService, JwtService jwtService) {
+    @Value("${jwt.secret}")
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
+
+
+    public AuthenticationController(AuthenticationManager authenticationManager, EmployeeService employeeService, CustomerService customerService, JwtService jwtService) {
         this.authenticationManager = authenticationManager;
         this.employeeService = employeeService;
+        this.customerService = customerService;
         this.jwtService = jwtService;
     }
 
@@ -59,7 +69,7 @@ public class AuthenticationController {
 
     @PostMapping(value = "/refreshtoken")
     public ResponseEntity<RequestRefreshToken> refreshToken(@RequestBody RequestRefreshToken refreshToken) {
-        Claims claims = Jwts.parser().setSigningKey("secret").parseClaimsJws(refreshToken.getRefreshToken()).getBody();
+        Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(refreshToken.getRefreshToken()).getBody();
 
         String username = claims.getSubject();
 
@@ -68,4 +78,34 @@ public class AuthenticationController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping(value = "/customers")
+    public ResponseEntity<CustomersList> getCustomers(@RequestBody RequestAccessToken accessToken) {
+        Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(accessToken.getAccessToken()).getBody();
+        String username = claims.getSubject();
+
+        //check if the token is expired
+        if(claims.getExpiration().before(new java.util.Date())){
+            //return error
+            return ResponseEntity.ok(null);
+        }
+
+        return ResponseEntity.ok(new CustomersList(customerService.getCustomers(employeeService.getByUsername(username))));
+    }
+
+    @PostMapping(value = "/customer/{id}")
+    public ResponseEntity<Customer> getCustomerById(@RequestBody RequestAccessToken accessToken, @PathVariable Long id) {
+        Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(accessToken.getAccessToken()).getBody();
+
+        //check if the token is expired
+        if(claims.getExpiration().before(new java.util.Date())){
+            //return error
+            return ResponseEntity.ok(null);
+        }
+
+        if (customerService.exists(id)) {
+            return ResponseEntity.ok(customerService.getById(id));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
 }

@@ -7,15 +7,15 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.client.RestTemplate;
-import security.frontend.client.Model.Employee;
-import security.frontend.client.Model.RequestRefreshToken;
-import security.frontend.client.Model.ResponseToken;
+import security.frontend.client.Model.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Objects;
 
 @Controller
@@ -28,6 +28,10 @@ public class ClientController {
     private String AUTHENTICATION_URL;
     @Value("${backend.url}/refreshtoken")
     private String REFRESH_TOKEN;
+    @Value("${backend.url}/customers")
+    private String CUSTOMERS_URL;
+    @Value("${backend.url}/customer/")
+    private String CUSTOMER_ID_URL;
 
     private static final String HOME_URL = "redirect:/home";
     private static final String LOGIN_URL = "redirect:/";
@@ -64,11 +68,38 @@ public class ClientController {
     }
 
     @GetMapping("/home")
-    public String home(HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
+    public String home(HttpServletRequest request, HttpServletResponse responseHttp, Model model) throws JsonProcessingException {
         if (isRefreshNeeded(request)) {
-            refreshToken(request, response);
+            refreshToken(request, responseHttp);
         }
-        return "home";
+
+        String token = null;
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if (cookie.getName().equals("accessToken")) {
+                    token = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        RequestAccessToken accessToken = new RequestAccessToken(token);
+        String body = getBody(accessToken);
+
+        HttpHeaders headers = getHeaders();
+        HttpEntity<String> entity = new HttpEntity<>(body, headers);
+
+        ResponseEntity<CustomersList> customerList = restTemplate.exchange(CUSTOMERS_URL, HttpMethod.POST, entity, CustomersList.class);
+
+        String response = "";
+        if (customerList.getStatusCode() == HttpStatus.OK) {
+            model.addAttribute("customers", customerList.getBody().getCustomers());
+            response = "home";
+        } else {
+            response = "error";
+        }
+
+        return response;
     }
 
     @GetMapping("/registration")
@@ -82,12 +113,39 @@ public class ClientController {
         return "error";
     }
 
-    @GetMapping("/userPage")
-    public String userPage(HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
+    @GetMapping("/customer/{id}")
+    public String getCustomer(@PathVariable Long id, HttpServletRequest request, HttpServletResponse responseHttp, Model model) throws JsonProcessingException {
         if (isRefreshNeeded(request)) {
-            refreshToken(request, response);
+            refreshToken(request, responseHttp);
         }
-        return "userPage";
+
+        String token = null;
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if (cookie.getName().equals("accessToken")) {
+                    token = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        RequestAccessToken accessToken = new RequestAccessToken(token);
+        String body = getBody(accessToken);
+
+        HttpHeaders headers = getHeaders();
+        HttpEntity<String> entity = new HttpEntity<>(body, headers);
+
+        ResponseEntity<Customer> customer = restTemplate.exchange(CUSTOMER_ID_URL + id, HttpMethod.POST, entity, Customer.class);
+
+        String response = "";
+        if (customer.getStatusCode() == HttpStatus.OK) {
+            model.addAttribute("customer", customer.getBody());
+            response = "customerPage";
+        } else {
+            response = "error";
+        }
+
+        return response;
     }
 
     @GetMapping("/adminPage")
@@ -205,5 +263,9 @@ public class ClientController {
 
     private String getBody(final RequestRefreshToken refreshToken) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(refreshToken);
+    }
+
+    private String getBody(final RequestAccessToken accessToken) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(accessToken);
     }
 }

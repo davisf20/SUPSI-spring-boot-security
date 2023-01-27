@@ -30,6 +30,10 @@ public class EmployeeService implements UserDetailsService {
         return employeeRepository.existsById(id);
     }
 
+    public Employee getByUsername(String username) {
+        return employeeRepository.findByUsername(username);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         List<SimpleGrantedAuthority> roles;

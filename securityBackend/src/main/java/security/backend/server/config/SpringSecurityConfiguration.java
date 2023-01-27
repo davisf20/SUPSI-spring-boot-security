@@ -33,7 +33,7 @@ public class SpringSecurityConfiguration {
         // Authorize requests
         // Each matcher is considered in the order they were declared
         http.authorizeRequests()
-                .antMatchers("/authenticate", "/register", "/refreshtoken").permitAll()
+                .antMatchers("/authenticate", "/register", "/refreshtoken", "/customers/**", "/customer/**").permitAll()
                 .anyRequest().authenticated();
         return http.build();
     }
