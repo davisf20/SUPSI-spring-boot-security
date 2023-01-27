@@ -47,6 +47,7 @@ public class SpringSecurityConfiguration {
                 .antMatchers("/home","/userPage").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/registration","/","/login","/error").permitAll()
                 .antMatchers("/css/**").permitAll()
+                .antMatchers("/js/**").permitAll()
                 .anyRequest().authenticated();
 
         // Define the exception handler for unauthorized requests

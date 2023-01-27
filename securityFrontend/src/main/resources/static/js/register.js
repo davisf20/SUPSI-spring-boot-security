@@ -3,7 +3,7 @@ const MAX_LENGTH = 14;
 
 const passwordCheck = function () {
     const password = document.querySelector('#password');
-    const confirmPassword = document.querySelector('#password-repeat');
+    const confirmPassword = document.querySelector('#confirm-password');
     const passwordMessage = document.querySelector('#passwordMessage');
     const confirmPasswordMessage = document.querySelector('#confirmPasswordMessage');
 
@@ -14,16 +14,16 @@ const passwordCheck = function () {
 
         // verifica se la nuova password contiene almeno tre categorie
         let categories = 0;
-        if (password.match(/[A-Z]/)) {
+        if (password.value.match(/[A-Z]/)) {
             categories++;
         }
-        if (password.match(/[a-z]/)) {
+        if (password.value.match(/[a-z]/)) {
             categories++;
         }
-        if (password.match(/[0-9]/)) {
+        if (password.value.match(/[0-9]/)) {
             categories++;
         }
-        if (password.match(/[\W_]/)) {
+        if (password.value.match(/[\W_]/)) {
             categories++;
         }
 
