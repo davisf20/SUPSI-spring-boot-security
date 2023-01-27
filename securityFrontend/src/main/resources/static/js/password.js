@@ -10,24 +10,8 @@ const passwordCheck = function () {
     const submitButton = document.querySelector('#submit');
 
     if (password.value.length >= MIN_LENGTH && password.value.length <= MAX_LENGTH) {
-        passwordMessage.innerHTML = '';
 
-        // verifica se la nuova password contiene almeno tre categorie
-        let categories = 0;
-        if (password.value.match(/[A-Z]/)) {
-            categories++;
-        }
-        if (password.value.match(/[a-z]/)) {
-            categories++;
-        }
-        if (password.value.match(/[0-9]/)) {
-            categories++;
-        }
-        if (password.value.match(/[\W_]/)) {
-            categories++;
-        }
-
-        if (categories < 3) {
+        if (password.value.match(/[A-Za-z]/) && password.value.match(/[0-9]/) && password.value.match(/[\W_]/)) {
             passwordMessage.innerHTML = '';
 
             if (password.value === confirmPassword.value) {
@@ -40,12 +24,12 @@ const passwordCheck = function () {
             }
         } else {
             passwordMessage.style.color = 'red';
-            passwordMessage.innerHTML = 'La nuova password deve contenere almeno tre categorie tra: lettere maiuscole, minuscole, numeri e segni di interpunzione.';
+            passwordMessage.innerHTML = 'La password deve contenere almeno lettere maiuscole o minuscole, numeri e segni di interpunzione o caratteri non alfabetici.';
             submitButton.disabled = true;
         }
     } else {
         passwordMessage.style.color = 'red';
-        passwordMessage.innerHTML = 'La nuova password deve essere lunga tra ${MIN_LENGTH} e ${MAX_LENGTH} caratteri.';
+        passwordMessage.innerHTML = `La nuova password deve essere lunga tra ${MIN_LENGTH} e ${MAX_LENGTH} caratteri.`;
         submitButton.disabled = true;
     }
 };
