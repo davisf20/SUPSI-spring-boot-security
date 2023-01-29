@@ -13,7 +13,7 @@ const changePasswordCheck = function () {
 
     if (oldPassword.value === password.value) {
         passwordMessage.style.color = 'red';
-        passwordMessage.innerHTML = 'La nuova password deve essere diversa da quella attuale.';
+        passwordMessage.innerHTML = 'The new password must be different from the current one.';
         submitButton.disabled = true;
     } else {
         passwordMessage.innerHTML = '';
@@ -25,7 +25,7 @@ const changePasswordCheck = function () {
 
                 if (password.value.match(sanitizerPattern)) {
                     confirmPasswordMessage.style.color = 'red';
-                    confirmPasswordMessage.innerHTML = 'I segni di interpunzione non possono essere <, >, /, ", \'';
+                    confirmPasswordMessage.innerHTML = 'Punctuation marks cannot be <, >, /, ", \'';
                     submitButton.disabled = true;
                 } else {
                     confirmPasswordMessage.innerHTML = '';
@@ -40,12 +40,12 @@ const changePasswordCheck = function () {
                 }
             } else {
                 passwordMessage.style.color = 'red';
-                passwordMessage.innerHTML = 'La password deve contenere almeno lettere maiuscole o minuscole, numeri e segni di interpunzione o caratteri non alfabetici.';
+                passwordMessage.innerHTML = 'The password must contain at least upper or lower case letters, numbers and punctuation marks or non-alphabetic characters.';
                 submitButton.disabled = true;
             }
         } else {
             passwordMessage.style.color = 'red';
-            passwordMessage.innerHTML = `La nuova password deve essere lunga tra ${MIN_LENGTH} e ${MAX_LENGTH} caratteri.`;
+            passwordMessage.innerHTML = `The new password must be between ${MIN_LENGTH} and ${MAX_LENGTH} characters long.`;
             submitButton.disabled = true;
         }
     }
