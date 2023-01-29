@@ -36,33 +36,64 @@
             </div>
         </nav>
         <!-- Customers Section-->
-        <section class="page-section portfolio" id="portfolio">
-            <div class="container">
-                <!-- Customers Section Heading-->
-                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0" th:text="${customer.firstName} + ' ' + ${customer.lastName}">Customer</h2>
-                <!-- Icon Divider-->
-                <div class="divider-custom">
-                    <div class="divider-custom-line"></div>
-                    <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
-                    <div class="divider-custom-line"></div>
-                </div>
-                <!-- Customers Grid Items-->
-                <div class="row justify-content-center">
-                    <!-- Customer Item -->
-                    <div class="col-md-6 col-lg-4 mb-5" th:each="customer : ${customers}">
-                        <div class="portfolio-item mx-auto" data-bs-toggle="modal" data-bs-target="#portfolioModal1">
-                            <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
-                                <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
-                            </div>
-                            <img class="img-fluid" src="../static/img/avatar.png" alt="avatar" th:src="@{'img/avatar.png'}" />
-                        </div>
-                        <a th:href="@{'/customer/' + ${customer.customerId}}">
-                        <h4 class="py-3 d-flex text-center justify-content-center w-100" th:text="${customer.firstName} + ' ' + ${customer.lastName}"></h4>
-                        </a>
+        <main class="container my-5 d-flex flex-wrap justify-content-center align-items-center w-100">
+            <section class="rounded-4 p-5 w-50 text-secondary bg-dark">
+                <article class="w-100">
+                    <h4 class="py-3 d-flex text-center justify-content-center w-100" th:text="${customer.firstName} + ' ' + ${customer.lastName}">Nome Cognome</h4>
+                    <br>
+                    <div>
+                        <b class="d-block">Company:</b>
+                        <p class="text-light" th:text="${customer.company}">Company</p>
                     </div>
-                </div>
-            </div>
-        </section>
+                    <br>
+                    <div>
+                        <b class="d-block">Address:</b>
+                        <time class="text-light" th:text="${customer.address}">Address</time>
+                    </div>
+                    <br>
+                    <div>
+                        <b class="d-block">City:</b>
+                        <p class="text-light" th:text="${customer.city}">City</p>
+                    </div>
+                    <br>
+                    <div>
+                        <b class="d-block">State:</b>
+                        <p class="text-light" th:text="${customer.state}">State</p>
+                    </div>
+                    <br>
+                    <div>
+                        <b class="d-block">Country:</b>
+                        <p class="text-light" th:text="${customer.country}">Country</p>
+                    </div>
+                    <br>
+                    <div>
+                        <b class="d-block">Postal Code:</b>
+                        <p class="text-light" th:text="${customer.postalCode}">Postal Code</p>
+                    </div>
+                    <br>
+                    <div>
+                        <b class="d-block">Phone:</b>
+                        <p class="text-light" th:text="${customer.phone}">Phone</p>
+                    </div>
+                    <br>
+                    <div>
+                        <b class="d-block">Fax:</b>
+                        <p class="text-light" th:text="${customer.fax}">Fax</p>
+                    </div>
+                    <br>
+                    <div>
+                        <b class="d-block">Email:</b>
+                        <p class="text-light" th:text="${customer.email}">Email</p>
+                    </div>
+                    <br>
+                    <div>
+                        <b class="d-block">Employee:</b>
+                        <p class="text-light" th:if="${customer.supportRepId} != null" th:text="${customer.supportRepId.getFirstName()} + ' ' + ${customer.supportRepId.getLastName()}">Pippo</p>
+                    </div>
+                    <br>
+                </article>
+            </section>
+        </main>
         <!-- Copyright Section-->
         <div class="copyright py-4 text-center text-white">
             <div class="container"><small>Copyright &copy; 2023</small></div>
