@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import security.backend.server.model.*;
+import security.backend.server.security.InputSanitizer;
 import security.backend.server.service.CustomerService;
 import security.backend.server.service.EmployeeService;
 import security.backend.server.service.JwtService;
@@ -43,6 +44,12 @@ public class AuthenticationController {
 
     @PostMapping(value = "/authenticate")
     public ResponseEntity<AuthenticationResponse> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
+        System.out.println("username: " + authenticationRequest.getUsername() + " password: " + authenticationRequest.getPassword());
+        // Sanitize input
+        authenticationRequest.setUsername(InputSanitizer.sanitize(authenticationRequest.getUsername()));
+        authenticationRequest.setPassword(InputSanitizer.sanitize(authenticationRequest.getPassword()));
+        System.out.println("username: " + authenticationRequest.getUsername() + " password: " + authenticationRequest.getPassword());
+
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     authenticationRequest.getUsername(), authenticationRequest.getPassword()));
@@ -105,6 +112,11 @@ public class AuthenticationController {
 
     @PostMapping(value = "/changePassword")
     public ResponseEntity<Boolean> changePassword(@RequestBody NewPassword newPassword) throws Exception {
+        // Sanitize input
+        newPassword.setUsername(InputSanitizer.sanitize(newPassword.getUsername()));
+        newPassword.setOldPassword(InputSanitizer.sanitize(newPassword.getOldPassword()));
+        newPassword.setNewPassword(InputSanitizer.sanitize(newPassword.getNewPassword()));
+
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     newPassword.getUsername(), newPassword.getOldPassword()));
@@ -117,6 +129,9 @@ public class AuthenticationController {
 
     @PostMapping(value = "/customers/search")
     public ResponseEntity<CustomersList> search(@RequestBody SearchRequest searchRequest) {
+        // Sanitize input
+        searchRequest.setParam(InputSanitizer.sanitize(searchRequest.getParam()));
+
         Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(searchRequest.getAccessToken()).getBody();
         String username = claims.getSubject();
 

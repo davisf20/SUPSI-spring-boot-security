@@ -1,5 +1,6 @@
 const MIN_LENGTH = 6;
 const MAX_LENGTH = 14;
+const sanitizerPattern = new RegExp("[<>\"']");
 
 const changePasswordCheck = function () {
     const oldPassword = document.querySelector('#oldPassword');
@@ -17,17 +18,25 @@ const changePasswordCheck = function () {
     } else {
         passwordMessage.innerHTML = '';
         if (password.value.length >= MIN_LENGTH && password.value.length <= MAX_LENGTH) {
+            passwordMessage.innerHTML = '';
 
             if (password.value.match(/[A-Za-z]/) && password.value.match(/[0-9]/) && password.value.match(/[\W_]/)) {
                 passwordMessage.innerHTML = '';
 
-                if (password.value === confirmPassword.value) {
-                    confirmPasswordMessage.innerHTML = '';
-                    submitButton.disabled = false;
-                } else {
+                if (password.value.match(sanitizerPattern)) {
                     confirmPasswordMessage.style.color = 'red';
-                    confirmPasswordMessage.innerHTML = 'The passwords do not match';
+                    confirmPasswordMessage.innerHTML = 'I segni di interpunzione non possono essere <, >, /, ", \'';
                     submitButton.disabled = true;
+                } else {
+                    confirmPasswordMessage.innerHTML = '';
+                    if (password.value === confirmPassword.value) {
+                        confirmPasswordMessage.innerHTML = '';
+                        submitButton.disabled = false;
+                    } else {
+                        confirmPasswordMessage.style.color = 'red';
+                        confirmPasswordMessage.innerHTML = 'The passwords do not match';
+                        submitButton.disabled = true;
+                    }
                 }
             } else {
                 passwordMessage.style.color = 'red';
