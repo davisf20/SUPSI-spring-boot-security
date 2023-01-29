@@ -120,4 +120,18 @@ public class AuthenticationController {
 
         return ResponseEntity.ok(employeeService.changePassword(newPassword.getUsername(), newPassword.getNewPassword()));
     }
+
+    @PostMapping(value = "/customers/search")
+    public ResponseEntity<CustomersList> search(@RequestBody SearchRequest searchRequest) {
+        Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(searchRequest.getAccessToken()).getBody();
+        String username = claims.getSubject();
+
+        String param = searchRequest.getParam();
+
+        if(claims.getExpiration().before(new java.util.Date())){
+            return ResponseEntity.ok(null);
+        }
+
+        return ResponseEntity.ok(new CustomersList(customerService.search(employeeService.getByUsername(username), param)));
+    }
 }

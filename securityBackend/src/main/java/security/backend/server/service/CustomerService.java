@@ -15,6 +15,10 @@ public class CustomerService {
         this.customerRepository = customerRepository;
     }
 
+    public List<Customer> getAll() {
+        return customerRepository.findAll();
+    }
+
     public List<Customer> getCustomers(Employee employee) {
         if (employee.getRole().equals("ROLE_ADMIN")) {
             return customerRepository.findAll();
@@ -35,5 +39,21 @@ public class CustomerService {
         if (exists(customer.getCustomerId()))
             return null;
         return customerRepository.save(customer);
+    }
+
+    public List<Customer> search(Employee employee, String param) {
+        List<Customer> customers;
+
+        if (param != null && !param.isEmpty()) {
+            if (employee.getRole().equals("ROLE_ADMIN")) {
+                customers = customerRepository.findByFirstNameContainingIgnoreCaseOrLastNameIsContainingIgnoreCaseOrCompanyContainingIgnoreCaseOrCityContainingIgnoreCaseOrStateContainingIgnoreCaseOrCountryContainingIgnoreCase(param, param, param, param, param, param);
+            } else {
+                customers = customerRepository.getCustomersBySupportRepIdAndFirstNameContainingIgnoreCaseOrLastNameIsContainingIgnoreCaseOrCompanyContainingIgnoreCaseOrCityContainingIgnoreCaseOrStateContainingIgnoreCaseOrCountryContainingIgnoreCase(employee, param, param, param, param, param, param);
+            }
+        } else {
+            customers = getAll();
+        }
+
+        return customers;
     }
 }

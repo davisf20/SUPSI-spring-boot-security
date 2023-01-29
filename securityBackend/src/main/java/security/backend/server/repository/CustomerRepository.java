@@ -10,4 +10,8 @@ import java.util.List;
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
     List<Customer> getCustomersBySupportRepId(Employee supportRepId);
+
+    List<Customer> getCustomersBySupportRepIdAndFirstNameContainingIgnoreCaseOrLastNameIsContainingIgnoreCaseOrCompanyContainingIgnoreCaseOrCityContainingIgnoreCaseOrStateContainingIgnoreCaseOrCountryContainingIgnoreCase(Employee supportRepId, String firstName, String lastName, String company, String city, String state, String country);
+
+    List<Customer> findByFirstNameContainingIgnoreCaseOrLastNameIsContainingIgnoreCaseOrCompanyContainingIgnoreCaseOrCityContainingIgnoreCaseOrStateContainingIgnoreCaseOrCountryContainingIgnoreCase(String firstName, String lastName, String company, String city, String state, String country);
 }

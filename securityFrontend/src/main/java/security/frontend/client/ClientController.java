@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import security.frontend.client.Model.*;
 
@@ -34,6 +35,8 @@ public class ClientController {
     private String CUSTOMER_ID_URL;
     @Value("${backend.url}/changePassword")
     private String CHANGE_PASSWORD_URL;
+    @Value("${backend.url}/customers/search")
+    private String SEARCH_CUSTOMER_URL;
 
     private static final String HOME_URL = "redirect:/home";
     private static final String LOGIN_URL = "redirect:/";
@@ -172,6 +175,41 @@ public class ClientController {
         return response;
     }
 
+    @GetMapping("/customers/search")
+    public String searchCustomers(@RequestParam("param") String param, HttpServletRequest requestHttp, HttpServletResponse responseHttp, Model model) throws JsonProcessingException {
+        if (isRefreshNeeded(requestHttp)) {
+            refreshToken(requestHttp, responseHttp);
+        }
+
+        String token = null;
+        if (requestHttp.getCookies() != null) {
+            for (Cookie cookie : requestHttp.getCookies()) {
+                if (cookie.getName().equals("accessToken")) {
+                    token = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        SearchRequest searchRequest = new SearchRequest(token, param);
+        String body = getBody(searchRequest);
+
+        HttpHeaders headers = getHeaders();
+        HttpEntity<String> entity = new HttpEntity<>(body, headers);
+
+        ResponseEntity<CustomersList> customerList = restTemplate.exchange(SEARCH_CUSTOMER_URL, HttpMethod.POST, entity, CustomersList.class);
+
+        String response = "";
+        if (customerList.getStatusCode() == HttpStatus.OK) {
+            model.addAttribute("customers", customerList.getBody().getCustomers());
+            response = "home :: searchResults";
+        } else {
+            response = "error";
+        }
+
+        return response;
+    }
+
     @GetMapping("/adminPage")
     public String adminPage(HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
         if (isRefreshNeeded(request)) {
@@ -295,5 +333,9 @@ public class ClientController {
 
     private String getBody(final NewPassword newPassword) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(newPassword);
+    }
+
+    private String getBody(final SearchRequest searchRequest) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(searchRequest);
     }
 }
