@@ -32,6 +32,8 @@ public class ClientController {
     private String CUSTOMERS_URL;
     @Value("${backend.url}/customer/")
     private String CUSTOMER_ID_URL;
+    @Value("${backend.url}/changePassword")
+    private String CHANGE_PASSWORD_URL;
 
     private static final String HOME_URL = "redirect:/home";
     private static final String LOGIN_URL = "redirect:/";
@@ -94,6 +96,7 @@ public class ClientController {
         String response = "";
         if (customerList.getStatusCode() == HttpStatus.OK) {
             model.addAttribute("customers", customerList.getBody().getCustomers());
+            model.addAttribute("newPassword", new NewPassword());
             response = "home";
         } else {
             response = "error";
@@ -145,6 +148,27 @@ public class ClientController {
             response = "error";
         }
 
+        return response;
+    }
+
+    @PostMapping("/changePassword")
+    public String changePassword(NewPassword newPassword, HttpServletRequest requestHttp, HttpServletResponse responseHttp) throws JsonProcessingException {
+        String response = "";
+        String newPasswordBody = getBody(newPassword);
+
+        HttpHeaders newPasswordHeaders = getHeaders();
+        HttpEntity<String> newPasswordEntity = new HttpEntity<>(newPasswordBody, newPasswordHeaders);
+        try {
+            ResponseEntity<String> newPasswordResponse = restTemplate.exchange(CHANGE_PASSWORD_URL, HttpMethod.POST, newPasswordEntity, String.class);
+
+            if (newPasswordResponse.getStatusCode().equals(HttpStatus.OK)) {
+                response = LOGIN_URL;
+            } else {
+                response = ERROR_URL;
+            }
+        } catch (Exception e) {
+            response = ERROR_URL;
+        }
         return response;
     }
 
@@ -267,5 +291,9 @@ public class ClientController {
 
     private String getBody(final RequestAccessToken accessToken) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(accessToken);
+    }
+
+    private String getBody(final NewPassword newPassword) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(newPassword);
     }
 }

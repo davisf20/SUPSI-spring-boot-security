@@ -45,7 +45,7 @@ public class SpringSecurityConfiguration {
                 .antMatchers().hasRole("USER")
                 .antMatchers("/adminPage").hasRole("ADMIN")
                 .antMatchers("/home","/customerPage").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/registration","/","/login","/error","/logout").permitAll()
+                .antMatchers("/registration","/","/login","/error","/logout","/changePassword").permitAll()
                 .antMatchers("/css/**").permitAll()
                 .antMatchers("/js/**").permitAll()
                 .antMatchers("/img/**").permitAll()

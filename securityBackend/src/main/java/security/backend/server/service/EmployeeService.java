@@ -57,4 +57,15 @@ public class EmployeeService implements UserDetailsService {
         employee.setPassword(bcryptEncoder.encode(employee.getPassword()));
         return employeeRepository.save(employee);
     }
+
+    public boolean changePassword(String username, String password) throws UsernameNotFoundException {
+        Employee employee = employeeRepository.findByUsername(username);
+        if (employee == null)
+            throw new UsernameNotFoundException("User not found " + username);
+        if (employee.getPassword().equals(bcryptEncoder.encode(password)))
+            return false;
+        employee.setPassword(bcryptEncoder.encode(password));
+        employeeRepository.save(employee);
+        return true;
+    }
 }

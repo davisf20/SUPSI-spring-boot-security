@@ -108,4 +108,16 @@ public class AuthenticationController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+
+    @PostMapping(value = "/changePassword")
+    public ResponseEntity<Boolean> changePassword(@RequestBody NewPassword newPassword) throws Exception {
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                    newPassword.getUsername(), newPassword.getOldPassword()));
+        } catch (BadCredentialsException e) {
+            throw new Exception("INVALID_CREDENTIALS", e);
+        }
+
+        return ResponseEntity.ok(employeeService.changePassword(newPassword.getUsername(), newPassword.getNewPassword()));
+    }
 }
