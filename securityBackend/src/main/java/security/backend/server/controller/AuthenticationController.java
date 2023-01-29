@@ -61,12 +61,6 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationResponse);
     }
 
-    @PostMapping(value = "/register")
-    public ResponseEntity<Employee> saveUser(@RequestBody Employee employee) {
-        return ResponseEntity.ok(employeeService.save(employee));
-    }
-
-
     @PostMapping(value = "/refreshtoken")
     public ResponseEntity<RequestRefreshToken> refreshToken(@RequestBody RequestRefreshToken refreshToken) {
         Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(refreshToken.getRefreshToken()).getBody();

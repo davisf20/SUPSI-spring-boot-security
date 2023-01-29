@@ -22,9 +22,6 @@ import java.util.Objects;
 @Controller
 public class ClientController {
     private final RestTemplate restTemplate;
-
-    @Value("${backend.url}/register")
-    private String REGISTRATION_URL;
     @Value("${backend.url}/authenticate")
     private String AUTHENTICATION_URL;
     @Value("${backend.url}/refreshtoken")
@@ -106,12 +103,6 @@ public class ClientController {
         }
 
         return response;
-    }
-
-    @GetMapping("/registration")
-    public String registration(Model model) {
-        model.addAttribute("employee", new Employee());
-        return "register";
     }
 
     @GetMapping("/error")
@@ -207,40 +198,6 @@ public class ClientController {
             response = "error";
         }
 
-        return response;
-    }
-
-    @GetMapping("/adminPage")
-    public String adminPage(HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
-        if (isRefreshNeeded(request)) {
-            refreshToken(request, response);
-        }
-        return "adminPage";
-    }
-
-    @PostMapping("/registration")
-    public String registration(Employee employee) throws JsonProcessingException {
-        String response = null;
-        // convert the user registration object to JSON
-        String registrationBody = getBody(employee);
-
-        // create headers specifying that it is JSON request
-        HttpHeaders registrationHeaders = getHeaders();
-        HttpEntity<String> registrationEntity = new HttpEntity<>(registrationBody, registrationHeaders);
-
-        try {
-            // Register User
-            ResponseEntity<String> registrationResponse = restTemplate.exchange(REGISTRATION_URL, HttpMethod.POST,
-                    registrationEntity, String.class);
-
-            if (registrationResponse.getStatusCode().equals(HttpStatus.OK)) {
-                response = LOGIN_URL;
-            } else {
-                response = ERROR_URL;
-            }
-        } catch (Exception e) {
-            response = ERROR_URL;
-        }
         return response;
     }
 
