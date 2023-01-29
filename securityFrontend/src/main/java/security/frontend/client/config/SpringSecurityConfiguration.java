@@ -45,11 +45,15 @@ public class SpringSecurityConfiguration {
                 .antMatchers().hasRole("USER")
                 .antMatchers("/adminPage").hasRole("ADMIN")
                 .antMatchers("/home","/customerPage").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/registration","/","/login","/error").permitAll()
+                .antMatchers("/registration","/","/login","/error","/logout").permitAll()
                 .antMatchers("/css/**").permitAll()
                 .antMatchers("/js/**").permitAll()
                 .antMatchers("/img/**").permitAll()
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
+                .and()
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/");
 
         // Define the exception handler for unauthorized requests
         http.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint);
