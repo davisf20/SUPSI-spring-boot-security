@@ -11,6 +11,8 @@ const changePasswordCheck = function () {
 
     const submitButton = document.querySelector('#submit');
 
+    console.log("SIUUUUUU");
+
     if (oldPassword.value === password.value) {
         passwordMessage.style.color = 'red';
         passwordMessage.innerHTML = 'The new password must be different from the current one.';
